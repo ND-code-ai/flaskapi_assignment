@@ -1,0 +1,24 @@
+minikube start --driver=docker
+
+# Create a persistent volume and persistent volume claim for MongoDB
+kubectl apply -f mongo-deployment.yaml
+
+# Build the Flask API Docker image and apply its deployment and service
+docker build -t flask-api:latest .
+kubectl apply -f flask-api-deployment.yaml
+
+# Check the status of deployments
+kubectl get pods
+
+# Access the Flask API service
+minikube service flask-api-service
+
+# Stop Minikube when done
+minikube stop
+
+
+Note:
+In the Flask API YAML file, a Persistent Volume Claim (flask-api-pvc) is defined, but you should adjust the storage class and other parameters according to your needs and the specifics of your Kubernetes cluster.
+The MongoDB connection string in the Flask API (MONGO_URI) should point to the mongo service DNS name, as that's the hostname from the perspective of the Kubernetes cluster.
+The Minikube start command uses the Docker driver; if you are using a different driver, adjust the command accordingly.
+Please make sure to adjust the configurations, such as storage size and access modes, according to your specific requirements and Kubernetes cluster setup.
